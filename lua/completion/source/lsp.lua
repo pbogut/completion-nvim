@@ -33,7 +33,11 @@ local function get_completion_word(item, prefix, suffix)
     if not item.insertTextFormat
     or protocol.InsertTextFormat[item.insertTextFormat] == "PlainText"
     or opt.get_option('enable_snippet') == "snippets.nvim" then
-      return newText
+      if not vim.bo.iskeyword:match('%$') then
+        return newText:gsub('^%$', '')
+      else
+        return newText
+      end
     else
       return vim.lsp.util.parse_snippet(newText)
     end
